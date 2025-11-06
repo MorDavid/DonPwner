@@ -26,53 +26,123 @@ DonPwner is an advanced penetration testing tool that revolutionizes credential 
 
 ## 🔧 Installation
 
+### Quick Install (Recommended)
+
+#### Using pipx (Recommended)
+```bash
+# Install DonPwner directly from GitHub
+pipx install git+https://github.com/MorDavid/DonPwner.git
+
+# Or install from local clone
+git clone https://github.com/MorDavid/DonPwner.git
+cd DonPwner
+pipx install .
+```
+
+#### Using uv (Fast Alternative)
+```bash
+# Install DonPwner directly from GitHub
+uv tool install git+https://github.com/MorDavid/DonPwner.git
+
+# Or install from local clone
+git clone https://github.com/MorDavid/DonPwner.git
+cd DonPwner
+uv tool install .
+```
+
+#### Traditional pip install
+```bash
+# Clone and install
+git clone https://github.com/MorDavid/DonPwner.git
+cd DonPwner
+pip install .
+
+# Or install directly from GitHub
+pip install git+https://github.com/MorDavid/DonPwner.git
+```
+
 ### Prerequisites
 ```bash
 # Python 3.8 or higher
 python --version
 
-# NetExec (formerly CrackMapExec)
+# NetExec (formerly CrackMapExec) - Required for attack functionality
 pipx install nxc
-```
-
-### Install Dependencies
-```bash
-pip install -r requirements.txt
+# or
+uv tool install nxc
 ```
 
 ### DonPAPI Setup
 ```bash
-# Install DonPAPI
+# Install DonPAPI (required for extracting credentials)
 pipx install git+https://github.com/login-securite/DonPAPI.git
 
 # Run DonPAPI to generate database
-...
+donpapi -u username -p password -d domain.com dc01.domain.com
+```
+
+### Verify Installation
+```bash
+# Check if DonPwner is installed correctly
+donpwner --help
+
+# Check version
+donpwner extract --help
+```
+
+### Upgrading
+```bash
+# Using pipx
+pipx upgrade donpwner
+
+# Using uv
+uv tool upgrade donpwner
+
+# Or reinstall latest version
+pipx install --force git+https://github.com/MorDavid/DonPwner.git
+```
+
+### Development Installation
+```bash
+# Clone repository
+git clone https://github.com/MorDavid/DonPwner.git
+cd DonPwner
+
+# Install in development mode with pipx
+pipx install -e .
+
+# Or with pip (creates virtual environment recommended)
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -e .
 ```
 
 ---
 
 ## 📖 Usage
 
+> **Note:** After installation with pipx/uv, use the `donpwner` command directly. No need for `python3 donpwner.py`!
+
 ### Basic Commands
-- `extract` - Extract wordlists from DonPAPI database
-- `attack` - Discover DCs and execute attacks using NetExec
-- `dcsync` - Compare DonPAPI secrets with secretsdump NT hashes
+- `donpwner extract` - Extract wordlists from DonPAPI database
+- `donpwner attack` - Discover DCs and execute attacks using NetExec  
+- `donpwner dcsync` - Compare DonPAPI secrets with secretsdump NT hashes
 
 #### 1️⃣ Extract - Auto-generate targeted wordlists
 ```bash
-python3 donpwner.py extract
+donpwner extract
 ```
 
 #### 2️⃣ Attack - Password Spray Done Right
 ```bash
 # Basic password spray
-python3 donpwner.py attack --target dc01.domain.com
+donpwner attack --target dc01.domain.com
 
 # Safe spray with 30-minute delay and 20% jitter
-python3 donpwner.py attack --target dc01.domain.com --delay 30 --jitter 20
+donpwner attack --target dc01.domain.com --delay 30 --jitter 20
 
 # Custom wordlists
-python3 donpwner.py attack --target 192.168.1.0/24 \
+donpwner attack --target 192.168.1.0/24 \
     --user-file custom_users.txt \
     --pass-file custom_passwords.txt \
     --delay 45 --jitter 15
@@ -88,7 +158,7 @@ python3 donpwner.py attack --target 192.168.1.0/24 \
 
 #### 3️⃣ DCSync (Bonus) - Match passwords against secretsdump
 ```bash
-python3 donpwner.py dcsync --load-secretsdump secretsdump.ntds
+donpwner dcsync --load-secretsdump secretsdump.ntds
 ```
 
 --- 
